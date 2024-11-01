@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обратный отсчёт</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+            margin: 0;
+        }
+        #countdown {
+            position: relative;
+            font-size: 3em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: shooting 1s linear;
+        }
+        .comet {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px white, 0 0 20px white;
+            animation: fly 3s linear infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+        @keyframes shooting {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(200px, 200px); opacity: 0; }
+        }
+        @keyframes fly {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(-200px, 200px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown"></div>
+    <script>
+        // Функция для создания звезд
+        function createStars() {
+            const starCount = 150;
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.left = `${Math.random() * 100}vw`;
+                document.body.appendChild(star);
+            }
+        }
+
+        // Функция для создания падающих звезд
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.top = `${Math.random() * 100}vh`;
+            shootingStar.style.left = `${Math.random() * 100}vw`;
+            document.body.appendChild(shootingStar);
+
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 1000);
+        }
+
+        // Функция для создания комет
+        function createComet() {
+            const comet = document.createElement('div');
+            comet.className = 'comet';
+            comet.style.top = `${Math.random() * 100}vh`;
+            comet.style.left = `${Math.random() * 100}vw`;
+            document.body.appendChild(comet);
+
+            setTimeout(() => {
+                comet.remove();
+            }, 3000);
+        }
+
+        // Функция для обновления обратного отсчета
+        function updateCountdown() {
+            const targetDate = new Date('November 2, 2024 03:00:00 GMT+0300');
+            const now = new Date();
+            const difference = targetDate - now;
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML =
+                `${days}д ${hours}ч ${minutes}м ${seconds}с`;
+
+            if (difference < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').innerHTML = "А что ты ждал? хах это был просто таймер";
+            }
+        }
+
+        createStars();
+        setInterval(createShootingStar, 2000);
+        setInterval(createComet, 5000);
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
+
